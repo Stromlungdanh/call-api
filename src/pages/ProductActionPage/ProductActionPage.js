@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import callApi from "../../utils/apiCaller";
+import { addProduct, editProduct } from "../../reducers/product";
 class ProductActionPage extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +50,12 @@ class ProductActionPage extends Component {
         price: this.state.txtPrice,
         status: this.state.chkbStatus,
       }).then((res) => {
+        this.props.onEditProduct({
+          id,
+          name: this.state.txtName,
+          price: this.state.txtPrice,
+          status: this.state.chkbStatus,
+        });
         history.goBack();
       });
     } else {
@@ -56,6 +64,12 @@ class ProductActionPage extends Component {
         price: this.state.txtPrice,
         status: this.state.chkbStatus,
       }).then((res) => {
+        this.props.onAddProduct({
+          id,
+          name: this.state.txtName,
+          price: this.state.txtPrice,
+          status: this.state.chkbStatus,
+        });
         history.goBack();
       });
     }
@@ -117,4 +131,15 @@ class ProductActionPage extends Component {
   }
 }
 
-export default ProductActionPage;
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onAddProduct: (data) => {
+      dispatch(addProduct(data));
+    },
+    onEditProduct: (data) => {
+      dispatch(editProduct(data));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ProductActionPage);
